@@ -19,7 +19,7 @@ if __name__ == "__main__":
     consumer = Consumer({
         'bootstrap.servers': 'localhost:9092',
         'group.id': consumer_group_id,
-        'default.topic.config': {'auto.offset.reset': 'latest',
+        'default.topic.config': {'auto.offset.reset': 'earliest',
                                  'enable.auto.commit': True}
     })
 
