@@ -44,4 +44,5 @@ if __name__ == "__main__":
                 print(msg.error())
                 Running = False
 
+        Running = False
     consumer.close()  # On ferme le consumer
