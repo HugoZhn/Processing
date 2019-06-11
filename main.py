@@ -26,18 +26,14 @@ if __name__ == "__main__":
     consumer.subscribe([topic_name, ])
 
     Running = True
-    msgs = []
 
     while Running:
         msg = consumer.poll()
 
         if msg:
             if not msg.error():
-                msgs.append(process(msg.value()))
-                if len(msgs) == 100:
-                    res = es.bulk(index=index_name, doc_type='tweet', body=msgs)
-                    print(res['result'])
-                    msgs = []
+                res = es.index(index=index_name, doc_type='tweet', body=process(msg.value()))
+                print(res['result'])
 
             elif msg.error().code() != KafkaError._PARTITION_EOF:
                 print(msg.error())
