@@ -37,7 +37,8 @@ if __name__ == "__main__":
             if not msg.error():
                 res = es.index(index=index_name, doc_type='_doc', body=process(msg.value()))
                 print(res['result'])
-                time.sleep(0.5)
+                print("WAITING")
+                time.sleep(5)
 
             elif msg.error().code() != KafkaError._PARTITION_EOF:
                 print(msg.error())
