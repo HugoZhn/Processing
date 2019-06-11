@@ -23,7 +23,7 @@ if __name__ == "__main__":
                                  'enable.auto.commit': False}
     })
 
-    consumer.subscribe(topic_name)
+    consumer.subscribe([topic_name, ])
 
     msgs = []
     nb_messages = 0
