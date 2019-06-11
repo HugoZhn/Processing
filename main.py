@@ -3,7 +3,6 @@ from confluent_kafka import Consumer
 from confluent_kafka import KafkaError
 from elasticsearch import Elasticsearch
 import sys
-import time
 
 if __name__ == "__main__":
 
@@ -27,14 +26,18 @@ if __name__ == "__main__":
     consumer.subscribe([topic_name, ])
 
     Running = True
+    msgs = []
 
     while Running:
         msg = consumer.poll()
 
         if msg:
             if not msg.error():
-                res = es.index(index=index_name, doc_type='_doc', body=process(msg.value()))
-                print(res['result'])
+                msgs.append(process(msg.value()))
+                if len(msgs) == 100:
+                    res = es.bulk(index=index_name, doc_type='tweet', body=msgs)
+                    print(res['result'])
+                    msgs = []
 
             elif msg.error().code() != KafkaError._PARTITION_EOF:
                 print(msg.error())
