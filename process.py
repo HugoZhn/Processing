@@ -5,7 +5,7 @@ import datetime
 def process(binary_data):
     json_data = json.loads(binary_data)
     data = filter_data(json_data)
-    return json.dumps(data)
+    return data
 
 
 def filter_data(json_data):

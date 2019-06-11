@@ -2,7 +2,40 @@ from process import process
 from confluent_kafka import Consumer
 from confluent_kafka import KafkaError
 from elasticsearch import Elasticsearch
+from elasticsearch.helpers import bulk
 import sys
+
+def set_data(topic_name, consumer_group_id, index_name):
+    consumer = Consumer({
+        'bootstrap.servers': 'localhost:9092',
+        'group.id': consumer_group_id,
+        'default.topic.config': {'auto.offset.reset': 'earliest',
+                                 'enable.auto.commit': True}
+    })
+
+    consumer.subscribe([topic_name, ])
+
+    running = True
+
+    while running:
+
+        message = consumer.poll()
+
+        if not msg.error():
+            to_send = process(message.value())
+
+            yield {
+                "_index": index_name,
+                "_type": "tweet",
+                "_source": to_send
+            }
+
+        elif message.error().code() != KafkaError._PARTITION_EOF:
+            print(message.error())
+            running = False
+
+    consumer.close()
+
 
 if __name__ == "__main__":
 
@@ -15,28 +48,4 @@ if __name__ == "__main__":
     print("index_name : ", sys.argv[3])
 
     es = Elasticsearch(hosts="localhost:9200")
-
-    consumer = Consumer({
-        'bootstrap.servers': 'localhost:9092',
-        'group.id': consumer_group_id,
-        'default.topic.config': {'auto.offset.reset': 'earliest',
-                                 'enable.auto.commit': True}
-    })
-
-    consumer.subscribe([topic_name, ])
-
-    Running = True
-
-    while Running:
-        msg = consumer.poll()
-
-        if msg:
-            if not msg.error():
-                #res = es.index(index=index_name, doc_type='tweet', body=process(msg.value()))
-                print("NTM")
-
-            elif msg.error().code() != KafkaError._PARTITION_EOF:
-                print(msg.error())
-                Running = False
-
-    consumer.close()  # On ferme le consumer
+    success, _ = bulk(es, set_data(topic_name, consumer_group_id, index_name))
