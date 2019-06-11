@@ -26,24 +26,18 @@ if __name__ == "__main__":
 
     consumer.subscribe([topic_name, ])
 
-    msgs = []
-    nb_messages = 0
     Running = True
 
     while Running:
-        msg = consumer.poll(-1)
+        msg = consumer.poll()
 
         if msg:
             if not msg.error():
                 res = es.index(index=index_name, doc_type='_doc', body=process(msg.value()))
                 print(res['result'])
-                print("WAITING")
-                time.sleep(5)
-                print("WAITED")
 
             elif msg.error().code() != KafkaError._PARTITION_EOF:
                 print(msg.error())
                 Running = False
 
-        Running = False
     consumer.close()  # On ferme le consumer
