@@ -32,8 +32,8 @@ if __name__ == "__main__":
 
         if msg:
             if not msg.error():
-                res = es.index(index=index_name, doc_type='tweet', body=process(msg.value()))
-                print(res['result'])
+                #res = es.index(index=index_name, doc_type='tweet', body=process(msg.value()))
+                print("NTM")
 
             elif msg.error().code() != KafkaError._PARTITION_EOF:
                 print(msg.error())
