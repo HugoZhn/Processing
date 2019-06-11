@@ -39,6 +39,7 @@ if __name__ == "__main__":
                 print(res['result'])
                 print("WAITING")
                 time.sleep(5)
+                print("WAITED")
 
             elif msg.error().code() != KafkaError._PARTITION_EOF:
                 print(msg.error())
