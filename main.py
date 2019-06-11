@@ -21,7 +21,7 @@ def set_data(topic_name, consumer_group_id, index_name):
 
         message = consumer.poll()
 
-        if not msg.error():
+        if not message.error():
             to_send = process(message.value())
 
             yield {
