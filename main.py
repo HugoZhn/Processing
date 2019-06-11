@@ -3,6 +3,7 @@ from confluent_kafka import Consumer
 from confluent_kafka import KafkaError
 from elasticsearch import Elasticsearch
 import sys
+import time
 
 if __name__ == "__main__":
 
@@ -19,7 +20,7 @@ if __name__ == "__main__":
     consumer = Consumer({
         'bootstrap.servers': 'localhost:9092',
         'group.id': consumer_group_id,
-        'default.topic.config': {'auto.offset.reset': 'latest',
+        'default.topic.config': {'auto.offset.reset': 'earliest',
                                  'enable.auto.commit': True}
     })
 
@@ -36,6 +37,7 @@ if __name__ == "__main__":
             if not msg.error():
                 res = es.index(index=index_name, doc_type='_doc', body=process(msg.value()))
                 print(res['result'])
+                time.sleep(0.5)
 
             elif msg.error().code() != KafkaError._PARTITION_EOF:
                 print(msg.error())
