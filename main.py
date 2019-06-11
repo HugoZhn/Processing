@@ -5,6 +5,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 import sys
 
+
 def set_data(topic_name, consumer_group_id, index_name):
     consumer = Consumer({
         'bootstrap.servers': 'localhost:9092',
