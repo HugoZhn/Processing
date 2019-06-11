@@ -19,8 +19,8 @@ if __name__ == "__main__":
     consumer = Consumer({
         'bootstrap.servers': 'localhost:9092',
         'group.id': consumer_group_id,
-        'default.topic.config': {'auto.offset.reset': 'smallest',
-                                 'enable.auto.commit': False}
+        'default.topic.config': {'auto.offset.reset': 'latest',
+                                 'enable.auto.commit': True}
     })
 
     consumer.subscribe([topic_name, ])
