@@ -28,7 +28,7 @@ if __name__ == "__main__":
     Running = True
 
     while Running:
-        msg = consumer.poll(-1)
+        msg = consumer.poll()
 
         if msg:
             if not msg.error():
