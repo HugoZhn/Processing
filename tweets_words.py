@@ -35,7 +35,7 @@ if __name__ == "__main__":
                 data = json.loads(msg.value())
                 text = data["extended_tweet"]["full_text"] if data['truncated'] else data["text"]
                 tokenized = tokenizer.tokenize(text)
-                words = [word for word in tokenized if word not in stopwords]
+                words = [word.lower() for word in tokenized if word.lower() not in stopwords]
                 for word in words:
                     res = es.index(index=index_name, doc_type='tweet', body={"word": word})
                     print(res['result'])
