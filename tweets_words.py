@@ -33,7 +33,7 @@ if __name__ == "__main__":
         if msg:
             if not msg.error():
                 data = json.loads(msg.value())
-                text = ["extended_tweet"]["full_text"] if data['truncated'] else data["text"]
+                text = data["extended_tweet"]["full_text"] if data['truncated'] else data["text"]
                 tokenized = tokenizer.tokenize(text)
                 words = [word for word in tokenized if word not in stopwords]
                 for word in words:
