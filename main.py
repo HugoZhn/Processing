@@ -1,4 +1,4 @@
-from process import process
+from TweetProcessor import TweetProcessor
 from confluent_kafka import Consumer
 from confluent_kafka import KafkaError
 from elasticsearch import Elasticsearch
@@ -13,6 +13,8 @@ if __name__ == "__main__":
     print("topic_name : ", sys.argv[1])
     print("consumer_group_id : ", sys.argv[2])
     print("index_name : ", sys.argv[3])
+
+    processor = TweetProcessor()
 
     es = Elasticsearch(hosts="localhost:9200")
 
@@ -32,7 +34,7 @@ if __name__ == "__main__":
 
         if msg:
             if not msg.error():
-                res = es.index(index=index_name, doc_type='tweet', body=process(msg.value()))
+                res = es.index(index=index_name, doc_type='tweet', body=processor.process_tweet(msg.value()))
                 print(res['result'])
 
             elif msg.error().code() != KafkaError._PARTITION_EOF:
