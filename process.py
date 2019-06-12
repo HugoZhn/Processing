@@ -9,7 +9,7 @@ def process(binary_data):
 
 
 def filter_data(json_data):
-    data = {"text": "TEST ALEX <3", #json_data["extended_tweet"]["full_text"] if json_data['truncated'] else json_data["text"],
+    data = {"text": json_data["extended_tweet"]["full_text"] if json_data['truncated'] else json_data["text"],
             "created_at": int(datetime.datetime.strptime(json_data["created_at"], "%a %b %d %H:%M:%S %z %Y").timestamp()*1000),
             "in_reply_to_user_id": json_data["in_reply_to_user_id"],
             "in_reply_to_status_id": json_data["in_reply_to_status_id"], "coordinates": json_data["coordinates"],
