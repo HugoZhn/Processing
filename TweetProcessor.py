@@ -45,7 +45,7 @@ class TweetProcessor:
         response_timestamp = dict_data["created_at"]
         try:
             message_timestamp = self.waiting_response[dict_data["in_reply_to_user_id"]]
-            response_time = int((response_timestamp - message_timestamp)/1000)
+            response_time = int((response_timestamp - message_timestamp)/1000)/60
             del self.waiting_response[dict_data["in_reply_to_user_id"]]
         except KeyError:
             response_time = None
