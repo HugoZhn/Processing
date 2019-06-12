@@ -21,8 +21,8 @@ def filter_data(json_data):
     data["user"]["followers_count"] = json_data["user"]["followers_count"]
     data["user"]["verified"] = json_data["user"]["verified"]
 
-    data["entities"]["urls"] = json_data["entities"]["urls"]
-    data["entities"]["hashtags"] = json_data["entities"]["hashtags"]
-    data["entities"]["user_mentions"] = json_data["entities"]["user_mentions"]
+    data["entities"]["urls"] = [url['expanded_url'] for url in json_data["entities"]["urls"]]
+    data["entities"]["hashtags"] = [hashtag["text"] for hashtag in json_data["entities"]["hashtags"]]
+    data["entities"]["user_mentions"] = [mention["id"] for mention in json_data["entities"]["user_mentions"]]
 
     return data
