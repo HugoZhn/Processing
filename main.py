@@ -14,7 +14,10 @@ if __name__ == "__main__":
     print("consumer_group_id : ", sys.argv[2])
     print("index_name : ", sys.argv[3])
 
-    processor = TweetProcessor()
+    if topic_name == "tweets_amazon_help":
+        processor = TweetProcessor(response_time=True)
+    else:
+        processor = TweetProcessor()
 
     es = Elasticsearch(hosts="localhost:9200")
 

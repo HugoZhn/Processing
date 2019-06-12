@@ -4,17 +4,20 @@ import datetime
 
 class TweetProcessor:
 
-    def __init__(self):
-        self.waiting_response = {}
+    def __init__(self, response_time=False):
+        if response_time:
+            self.waiting_response = {}
+        self.response_time = response_time
 
     def process_tweet(self, binary_data):
         json_data = json.loads(binary_data)
         data = self._filter_data(json_data)
-        data["response_time"] = None
-        if data["user"]["id"] != 85741735:
-            self.waiting_response[data["user"]["id"]] = data["created_at"]
-        else:
-            data["response_time"] = self._compute_response_time(data)
+        if self.response_time:
+            data["response_time"] = None
+            if data["user"]["id"] != 85741735:
+                self.waiting_response[data["user"]["id"]] = data["created_at"]
+            else:
+                data["response_time"] = self._compute_response_time(data)
         return data
 
     @staticmethod
