@@ -1,10 +1,16 @@
 import json
 import datetime
+from nltk.tokenize import RegexpTokenizer
+from nltk.corpus import stopwords
 
 
 class TweetProcessor:
 
     def __init__(self, response_time=False):
+
+        self.stopwords = stopwords.words('english')
+        self.tokenizer = RegexpTokenizer(r'\w+')
+
         if response_time:
             self.waiting_response = {}
         self.response_time = response_time
@@ -20,8 +26,7 @@ class TweetProcessor:
                 data["response_time"] = self._compute_response_time(data)
         return data
 
-    @staticmethod
-    def _filter_data(json_data):
+    def _filter_data(self, json_data):
         data = {"text": json_data["extended_tweet"]["full_text"] if json_data['truncated'] else json_data["text"],
                 "created_at": int(datetime.datetime.strptime(json_data["created_at"], "%a %b %d %H:%M:%S %z %Y").timestamp()*1000),
                 "in_reply_to_user_id": json_data["in_reply_to_user_id"],
@@ -39,6 +44,8 @@ class TweetProcessor:
         data["entities"]["hashtags"] = [hashtag["text"] for hashtag in json_data["entities"]["hashtags"]]
         data["entities"]["user_mentions"] = [mention["id"] for mention in json_data["entities"]["user_mentions"]]
 
+        tokenized = self.tokenizer.tokenize(data["text"])
+        data["words"] = [word for word in tokenized if word not in self.stopwords]
         return data
 
     def _compute_response_time(self, dict_data):
