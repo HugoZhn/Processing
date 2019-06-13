@@ -5,6 +5,7 @@ from elasticsearch import Elasticsearch
 import json
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
+import datetime
 
 if __name__ == "__main__":
     topic_name = sys.argv[1]
@@ -42,7 +43,8 @@ if __name__ == "__main__":
                 words = [word.lower() for word in tokenized if word.lower() not in stopwords]
                 words = [word for word in words if word not in custom_stopwords]
                 for word in words:
-                    res = es.index(index=index_name, doc_type='tweet', body={"word": word})
+                    res = es.index(index=index_name, doc_type='word', body={"word": word, "timestamp":
+                        int(datetime.datetime.strptime(data["created_at"], "%a %b %d %H:%M:%S %z %Y").timestamp()*1000)})
 
             elif msg.error().code() != KafkaError._PARTITION_EOF:
                 print(msg.error())
