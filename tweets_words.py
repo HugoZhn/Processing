@@ -38,7 +38,6 @@ if __name__ == "__main__":
                 words = [word.lower() for word in tokenized if word.lower() not in stopwords]
                 for word in words:
                     res = es.index(index=index_name, doc_type='tweet', body={"word": word})
-                    print(res['result'])
 
             elif msg.error().code() != KafkaError._PARTITION_EOF:
                 print(msg.error())
