@@ -23,6 +23,10 @@ if __name__ == "__main__":
     consumer.subscribe([topic_name, ])
 
     stopwords = stopwords.words('english')
+    custom_stopwords = ["https", "co", "rt", "get", "let", "amazon", "amazonhelp", "via", "amp", "us", "000", "one"]
+    for i in range(2000):
+        custom_stopwords.append(str(i))
+
     tokenizer = RegexpTokenizer(r'\w+')
 
     Running = True
@@ -36,6 +40,7 @@ if __name__ == "__main__":
                 text = data["extended_tweet"]["full_text"] if data['truncated'] else data["text"]
                 tokenized = tokenizer.tokenize(text)
                 words = [word.lower() for word in tokenized if word.lower() not in stopwords]
+                words = [word for word in words if word not in custom_stopwords]
                 for word in words:
                     res = es.index(index=index_name, doc_type='tweet', body={"word": word})
 
