@@ -7,6 +7,7 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 import datetime
 
+
 if __name__ == "__main__":
     topic_name = sys.argv[1]
     consumer_group_id = sys.argv[2]
@@ -24,7 +25,7 @@ if __name__ == "__main__":
     consumer.subscribe([topic_name, ])
 
     stopwords = stopwords.words('english')
-    custom_stopwords = ["https", "co", "rt", "get", "let", "amazon", "amazonhelp", "via", "amp", "us", "000", "one"]
+    custom_stopwords = ["https", "co", "rt", "get", "let", "amazon", "amazonhelp", "via", "amp", "us", "000", "one", "hi"]
     for i in range(2000):
         custom_stopwords.append(str(i))
 

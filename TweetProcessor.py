@@ -1,5 +1,6 @@
 import json
 import datetime
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 
 class TweetProcessor:
@@ -8,10 +9,13 @@ class TweetProcessor:
         if response_time:
             self.waiting_response = {}
         self.response_time = response_time
+        self.sentiment_analyzer = SentimentIntensityAnalyzer()
 
     def process_tweet(self, binary_data):
         json_data = json.loads(binary_data)
         data = self._filter_data(json_data)
+        data["sentiment"] = self.sentiment_analyzer.polarity_scores(data["text"])["compound"]
+
         if self.response_time:
             data["response_time"] = None
             if data["user"]["id"] != 85741735:
