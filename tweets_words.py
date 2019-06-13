@@ -25,7 +25,8 @@ if __name__ == "__main__":
     consumer.subscribe([topic_name, ])
 
     stopwords = stopwords.words('english')
-    custom_stopwords = ["https", "co", "rt", "get", "let", "amazon", "amazonhelp", "via", "amp", "us", "000", "one", "hi"]
+    custom_stopwords = ["https", "co", "rt", "get", "let", "amazon", "amazonhelp", "via", "amp", "us", "000", "one",
+                        "hi", "6280346856", "vv", "vie01lj9nj", "ni"]
     for i in range(2000):
         custom_stopwords.append(str(i))
 
@@ -39,13 +40,14 @@ if __name__ == "__main__":
         if msg:
             if not msg.error():
                 data = json.loads(msg.value())
-                text = data["extended_tweet"]["full_text"] if data['truncated'] else data["text"]
-                tokenized = tokenizer.tokenize(text)
-                words = [word.lower() for word in tokenized if word.lower() not in stopwords]
-                words = [word for word in words if word not in custom_stopwords]
-                for word in words:
-                    res = es.index(index=index_name, doc_type='word', body={"word": word, "timestamp":
-                        int(datetime.datetime.strptime(data["created_at"], "%a %b %d %H:%M:%S %z %Y").timestamp()*1000)})
+                if (topic_name == "tweets_amazon_help") and (data["user"]["id"] != 85741735):
+                    text = data["extended_tweet"]["full_text"] if data['truncated'] else data["text"]
+                    tokenized = tokenizer.tokenize(text)
+                    words = [word.lower() for word in tokenized if word.lower() not in stopwords]
+                    words = [word for word in words if word not in custom_stopwords]
+                    for word in words:
+                        res = es.index(index=index_name, doc_type='word', body={"word": word, "timestamp":
+                            int(datetime.datetime.strptime(data["created_at"], "%a %b %d %H:%M:%S %z %Y").timestamp()*1000)})
 
             elif msg.error().code() != KafkaError._PARTITION_EOF:
                 print(msg.error())
