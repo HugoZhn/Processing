@@ -30,7 +30,7 @@ class TweetProcessor:
                 "created_at": int(datetime.datetime.strptime(json_data["created_at"], "%a %b %d %H:%M:%S %z %Y").timestamp()*1000),
                 "in_reply_to_user_id": json_data["in_reply_to_user_id"],
                 "in_reply_to_status_id": json_data["in_reply_to_status_id"],
-                "source": json_data["source"],
+                "source": json_data["source"].split(">")[1],
                 "coordinates": json_data["coordinates"]["coordinates"] if json_data["coordinates"] else None,
                 "retweeted_status_id": json_data["retweeted_status"]["id"] if "retweeted_status" in json_data else None,
                 "user": {}, "entities": {}}
